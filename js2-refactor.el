@@ -156,6 +156,71 @@
   (define-key js2-mode-map (kbd "<C-S-down>") 'js2r-move-line-down)
   (define-key js2-mode-map (kbd "<C-S-up>") 'js2r-move-line-up))
 
+;;; Menu ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'easymenu)
+
+(defvar js2r--menu nil
+  "Holds the menu.")
+
+(easy-menu-define js2r--menu
+  js2-mode-map
+  "Menu used when js2r is active."
+  '("Refactor"
+    ["Log This" js2r-log-this
+     :help "Adds a console.log statement for what is at point (or region)."]
+    ["Extract Function" js2r-extract-function
+     :help "Extracts the marked expressions out into a new named function."]
+    ["Extract Method" js2r-extract-method
+     :help "Extracts the marked expressions out into a new named method in an object literal."]
+    ["Introduce Parameter" js2r-introduce-parameter
+     :help "Changes the marked expression to a parameter in a local function."]
+    ["Localize Parameter" js2r-localize-parameter
+     :help "Changes a parameter to a local var in a local function."]
+    ["Wrap Buffer In Iife" js2r-wrap-buffer-in-iife
+     :help "Wraps the entire buffer in an immediately invoked function expression"]
+    ["Inject Global In Iife" js2r-inject-global-in-iife
+     :help "Creates a shortcut for a marked global by injecting it in the wrapping immediately invoked function expression"]
+    ["Add To Globals Annotation" js2r-add-to-globals-annotation
+     :help "Creates a /*global */ annotation if it is missing, and adds the var at point to it."]
+    ["Arguments To Object" js2r-arguments-to-object
+     :help "Replaces arguments to a function call with an object literal of named arguments. Requires yasnippets."]
+    ["Ternary To If" js2r-ternary-to-if
+     :help "Converts ternary operator to if-statement."]
+    "----"
+    ("Expand / Contract"
+     ["Expand Object" js2r-expand-object
+      :help "Converts a one line object literal to multiline."]
+     ["Contract Object" js2r-contract-object
+      :help "Converts a multiline object literal to one line."]
+     ["Expand Function" js2r-expand-function
+      :help "Converts a one line function to multiline (expecting semicolons as statement delimiters)."]
+     ["Contract Function" js2r-contract-function
+      :help "Converts a multiline function to one line (expecting semicolons as statement delimiters)."]
+     ["Expand Array" js2r-expand-array
+      :help "Converts a one line array to multiline."]
+     ["Contract Array" js2r-contract-array
+      :help "Converts a multiline array to one line."])
+    ("Var"
+     ["Extract Var" js2r-extract-var
+      :help "Takes a marked expression and replaces it with a var."]
+     ["Inline Var" js2r-inline-var
+      :help "Replaces all instances of a variable with its initial value."]
+     ["Rename Var" js2r-rename-var
+      :help "Renames the variable on point and all occurrences in its lexical scope."]
+     ["Var To This" js2r-var-to-this
+      :help "Changes local var a to be this.a instead."]
+     ["Split Var Declaration" js2r-split-var-declaration
+      :help "Splits a var with multiple vars declared, into several var statements."]
+     )
+    ("Paredit"
+     ["Unwrap" js2r-unwrap
+      :help "Replaces the parent statement with the selected region."]
+     ["Forward Slurp" js2r-forward-slurp
+      :help "Moves the next statement into current function, if-statement, for-loop or while-loop."]
+     ["Forward Barf" js2r-forward-barf
+      :help "Moves the last child out of current function, if-statement, for-loop or while-loop."])))
+
 ;;;###autoload
 (defun js2r-add-keybindings-with-prefix (prefix)
   (js2r--add-keybindings (-partial 'js2r--key-pairs-with-prefix prefix)))
